@@ -20,7 +20,7 @@ class VLMConfigNode:
             "required": {
                 "apikey": ("STRING", {"default": "", "label": "API Key"}),
                 "service_resource_id": ("STRING", {"default": "kb-service-b2a3d93f6a9f93ed", "label": "Service Resource ID"}),
-                "base_url": ("STRING", {"default": "http://api-knowledgebase.mlp.cn-beijing.volces.com", "label": "API地址"}),
+                "base_url": ("STRING", {"default": "api-knowledgebase.mlp.cn-beijing.volces.com", "label": "API地址"}),
             }
         }
 
@@ -68,7 +68,7 @@ class RAGChatNode:
         """调用service/chat接口"""
         apikey = vlm_config.get("apikey", "")
         service_resource_id = vlm_config.get("service_resource_id", "")
-        base_url = vlm_config.get("base_url", "").replace("https://", "http://").replace("http://", "")
+        base_url = vlm_config.get("base_url", "").replace("http://", "").replace("https://", "")
 
         headers = {
             "Accept": "application/json",
@@ -83,7 +83,7 @@ class RAGChatNode:
             "stream": False
         }
 
-        full_url = f"http://{base_url}/api/knowledge/service/chat"
+        full_url = f"https://{base_url}/api/knowledge/service/chat"
 
         try:
             rsp = requests.post(
@@ -103,10 +103,10 @@ class RAGChatNode:
                 return (f"API错误: {result.get('message', '未知错误')}",)
 
             # 提取回复内容
-            choices = result.get("data", {}).get("choices", [])
-            if choices:
-                content = choices[0].get("message", {}).get("content", "")
-                return (content,)
+            data = result.get("data", {})
+            generated_answer = data.get("generated_answer", "")
+            if generated_answer:
+                return (generated_answer,)
 
             return (f"无法解析响应: {rsp.text[:500]}",)
 

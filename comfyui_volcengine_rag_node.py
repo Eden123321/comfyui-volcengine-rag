@@ -36,7 +36,7 @@ class VLMConfigNode:
                 "model_version": ("STRING", {"default": "251228", "label": "模型版本"}),
                 "temperature": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 2.0, "label": "Temperature"}),
                 "max_tokens": ("INT", {"default": 4096, "min": 1, "max": 8192, "label": "最大Token数"}),
-                "base_url": ("STRING", {"default": "http://multi-cloud.byted.org", "label": "API地址"}),
+                "base_url": ("STRING", {"default": "https://api-knowledgebase.mlp.cn-beijing.volces.com", "label": "API地址"}),
             },
             "optional": {
                 "image_query": ("STRING", {"default": "", "label": "图片URL(可选)"}),

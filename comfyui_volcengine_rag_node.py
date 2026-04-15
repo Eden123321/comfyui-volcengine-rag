@@ -163,10 +163,6 @@ def search_knowledge(query: str, image_query: str, config: Dict) -> str:
         headers=info_req.headers,
         data=info_req.body
     )
-    # 调试：打印响应状态和内容前200字符
-    print(f"[DEBUG] search_knowledge status: {rsp.status_code}, response: {rsp.text[:500] if rsp.text else 'EMPTY'}")
-    if rsp.status_code != 200 or not rsp.text:
-        return json.dumps({"code": -1, "message": f"HTTP {rsp.status_code}: {rsp.text[:200] if rsp.text else 'empty'}"})
     return rsp.text
 
 
@@ -221,10 +217,7 @@ def get_content_for_prompt(point: Dict) -> str:
 
 def generate_prompt(rsp_txt: str, base_prompt: str, config: Dict, user_query: str) -> List[Dict]:
     """生成发送给LLM的完整prompt"""
-    try:
-        rsp = json.loads(rsp_txt)
-    except Exception as e:
-        return [{"role": "system", "content": f"解析检索结果失败: {str(e)}, 原始内容: {rsp_txt[:500] if rsp_txt else '空'}"}]
+    rsp = json.loads(rsp_txt)
     if rsp.get("code") != 0:
         return [{"role": "system", "content": "检索失败：" + rsp.get("message", "")}]
 
